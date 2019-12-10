@@ -7,4 +7,4 @@ install:
   - pip install .
   - export SESSION_CP_CONFIG_FILE="$PWD/server.conf"
 script:
-  - pytest tests
+  - pytest -s tests
