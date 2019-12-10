@@ -5,6 +5,6 @@ cache: pip
 install:
   - pip install -r requirements.txt
   - pip install .
-  - export SESSION_CP_CONFIG_FILE="$PWD/server.conf"
+  - export SESSION_CP_CONFIG_FILE="$TRAVIS_BUILD_DIR/server.conf"
 script:
   - pytest -s tests
