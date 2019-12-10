@@ -64,5 +64,7 @@ class Root:
 # pylint: enable=too-few-public-methods
 
 if __name__ == '__main__':
+    from pacifica.session import _PROJ_DIR
+    print(_PROJ_DIR)
     CONFIG_FILE = CP_CONFIG_FILE
     cherrypy.quickstart(Root(), '/', CONFIG_FILE)

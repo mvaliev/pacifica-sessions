@@ -7,13 +7,14 @@ import pytest
 import requests
 from pacifica.session.rest import Root
 from pacifica.session.globals import CP_CONFIG_FILE, CP_CONFIG_FILE_DEFAULT
-
+from pacifica.session import _PROJ_DIR
 
 @pytest.fixture(scope="module")
 def run_server():
     """server setup."""
     config_file = CP_CONFIG_FILE
     print("CP_CONFIG_FILE_DEFAULT=",CP_CONFIG_FILE_DEFAULT)
+    print("_PROJ_DIR=",_PROJ_DIR)
     cherrypy.config.update(config_file)
     cherrypy.tree.mount(Root(), '/', config_file)
 
