@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
    name='pacifica',
@@ -6,6 +6,6 @@ setup(
    description='Pacifica Sessions Servie',
    author='Marat Valiev`',
    author_email='marat.valiev@gmail.com',
-   packages=['pacifica'],  #same as name
+   packages=find_packages(),
    install_requires=['cherrypy'], #external packages as dependencies
 )
