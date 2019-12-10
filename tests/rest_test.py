@@ -6,11 +6,13 @@ import cherrypy
 import pytest
 import requests
 from pacifica.session.rest import Root
+from pacifica.session.globals import CP_CONFIG_FILE
 
 
 @pytest.fixture(scope="module")
 def run_server():
-    config_file = "/Users/marat/codes/pacifica/pacifica-session/server.conf"
+    """server setup."""
+    config_file = CP_CONFIG_FILE
     cherrypy.config.update(config_file)
     cherrypy.tree.mount(Root(), '/', config_file)
 
@@ -31,9 +33,10 @@ def run_server():
         cherrypy.engine.block()
 
 
+# pylint: disable=redefined-outer-name
 def test_post(run_server):
+    """test post"""
     endpoint = '/dispatch/marat'
     url = run_server
-    s = requests.post(F'{url}{endpoint}')
-    assert s.text == 'marat'
-
+    resp = requests.post(F'{url}{endpoint}')
+    assert resp.text == 'marat'

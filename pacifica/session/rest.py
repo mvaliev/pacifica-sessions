@@ -1,7 +1,8 @@
 """CherryPy module containing classes for rest interface."""
 from json import dumps
 import cherrypy
-from cherrypy import HTTPError
+# from cherrypy import HTTPError
+from pacifica.session.globals import CP_CONFIG_FILE
 
 def error_page_default(**kwargs):
     """The default error page should always enforce json."""
@@ -19,9 +20,6 @@ class Dispatch:
     """CherryPy EventMatch endpoint."""
 
     exposed = True
-
-    def index(self):
-        return 'Hello'
 
     @staticmethod
     # pylint: disable=invalid-name
@@ -48,10 +46,11 @@ class Status:
     # pylint: disable=invalid-name
     def GET(uuid):
         """Receive the event and dispatch it to backend."""
-        try:
-            return str(ExampleModel.get(uuid=uuid).value)
-        except DoesNotExist:
-            raise HTTPError('404', 'Not Found')
+        return F'GET {uuid}'
+        # try:
+        #     return str(ExampleModel.get(uuid=uuid).value)
+        # except DoesNotExist:
+        #     raise HTTPError('404', 'Not Found')
 # pylint: enable=too-few-public-methods
 
 
@@ -65,5 +64,5 @@ class Root:
 # pylint: enable=too-few-public-methods
 
 if __name__ == '__main__':
-    config_file = "/Users/marat/codes/pacifica/pacifica-session/server.conf"
-    cherrypy.quickstart(Root(), '/', config_file)
+    CONFIG_FILE = CP_CONFIG_FILE
+    cherrypy.quickstart(Root(), '/', CONFIG_FILE)
