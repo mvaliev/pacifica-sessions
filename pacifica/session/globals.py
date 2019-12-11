@@ -5,7 +5,7 @@ from os import getenv
 from pathlib import Path
 
 THIS_DIR = Path(__file__).resolve().parent
-PROJ_DIR = THIS_DIR.parent.parent
+PROJ_DIR = THIS_DIR.parent
 
 CP_CONFIG_FILE_DEFAULT = str(PROJ_DIR.joinpath('server.conf'))
 CP_CONFIG_FILE = getenv('SESSION_CP_CONFIG_FILE', CP_CONFIG_FILE_DEFAULT)
@@ -26,5 +26,5 @@ def get_proj_dir():
     return proj_dir
 
 if __name__ == '__main__':
-    print(get_proj_dir())
+    print(type(PROJ_DIR),PROJ_DIR)
     print(get_proj_dir())

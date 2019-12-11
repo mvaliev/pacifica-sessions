@@ -7,5 +7,6 @@ setup(
    author='Marat Valiev`',
    author_email='marat.valiev@gmail.com',
    packages=find_packages(),
+   include_package_data=True,
    install_requires=['cherrypy'], #external packages as dependencies
 )
