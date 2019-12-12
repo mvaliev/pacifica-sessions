@@ -2,22 +2,17 @@
 # -*- coding: utf-8 -*-
 """This is the test module."""
 
-import os
+
 import cherrypy
 import pytest
 import requests
 from pacifica.session.rest import Root
-from pacifica.session.globals import CP_CONFIG_FILE, CP_CONFIG_FILE_DEFAULT, get_proj_dir
-from pacifica.session import _PROJ_DIR
+from pacifica.session.globals import CP_CONFIG_FILE
 
 @pytest.fixture(scope="module")
 def run_server():
     """server setup."""
     config_file = CP_CONFIG_FILE
-    print("CP_CONFIG_FILE_DEFAULT=",CP_CONFIG_FILE_DEFAULT)
-    print("_PROJ_DIR=",_PROJ_DIR)
-    print("ls=",os.listdir(get_proj_dir()))
-    print("_PROJ_DIR=",get_proj_dir())
     cherrypy.config.update(config_file)
     cherrypy.tree.mount(Root(), '/', config_file)
 
