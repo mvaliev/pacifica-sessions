@@ -13,6 +13,8 @@ e1839a8 = {editable = true,path = "."}
 pacifica-sessions = {editable = true,path = "."}
 requests = "*"
 pytest = "*"
+pylint = "*"
+uuid = "*"
 
 [requires]
 python_version = "3.7"
