@@ -7,9 +7,9 @@ import cherrypy
 import pytest
 import requests
 
-
 from pacifica.session.rest import SessionDispatch
 from pacifica.session.globals import CP_CONFIG_FILE
+
 
 @pytest.fixture(scope="module")
 def run_server():
@@ -34,7 +34,8 @@ def run_server():
         cherrypy.engine.exit()
         cherrypy.engine.block()
 
-#pylint: disable=redefined-outer-name
+
+# pylint: disable=redefined-outer-name
 def test_sessions_get(run_server):
     """test post"""
     session_id = None
@@ -43,6 +44,7 @@ def test_sessions_get(run_server):
     resp = requests.get(F'{url}{endpoint}')
     ref_text = F'Session session_id={session_id}'
     assert resp.text == ref_text
+
 
 def test_sessions_id_get(run_server):
     """test post"""
@@ -63,6 +65,7 @@ def test_file_get(run_server):
     resp = requests.get(F'{url}{endpoint}')
     ref_text = F'Files session_id={session_id}'
     assert resp.text == ref_text
+
 
 def test_meta_get(run_server):
     """test post"""

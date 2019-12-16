@@ -26,8 +26,11 @@
 
 ### sessions
     
-    uuid    - primary uuid session id
-    status  - session status (open/locked) 
-    created - creation datetime
-    updated - last update datetime  
-    
+    uuid        - primary uuid session id
+    name        - short description (text)
+    created     - creation (datetime)
+    updated     - last update (datetime)
+    deleted     - deletion (datetime)
+    status      - session status (open/locked)
+    description - user description/notes (text)
+    exception   - system generated exceptions (text)  

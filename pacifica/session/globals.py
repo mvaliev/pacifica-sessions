@@ -8,6 +8,7 @@ THIS_DIR = Path(__file__).resolve().parent
 PROJ_DIR = THIS_DIR.parent
 
 CP_CONFIG_FILE_DEFAULT = str(PROJ_DIR.joinpath('server.conf'))
+DB_FILE_DEFAULT = str(PROJ_DIR.joinpath('session.db'))
 CP_CONFIG_FILE = getenv('SESSION_CP_CONFIG_FILE', CP_CONFIG_FILE_DEFAULT)
 
 
