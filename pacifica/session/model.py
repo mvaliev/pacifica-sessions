@@ -29,7 +29,7 @@ class SessionModel(Model):
     """Data model for session."""
 
     session_id = UUIDField(primary_key=True, column_name='uuid', default=uuid.uuid4, index=True)
-    status = CharField(index=True)
+    status = CharField(index=True, default='open', null=False)
     name = TextField(null=True)
     created = DateTimeField(default=datetime.now, index=True)
     updated = DateTimeField(default=datetime.now, index=True)
@@ -93,11 +93,11 @@ def model_clear():
         ModelState.handle.drop_tables(ModelState.models, safe=True)
         ModelState.clear()
 
-
-if __name__ == '__main__':
-    model_clear()
-    print(model_create())
-    model_clear()
-    print(model_create())
-    session = SessionModel.create(status='closed')
-    # print(ORMState.handle)
+#
+# if __name__ == '__main__':
+#     model_clear()
+#     print(model_create())
+#     model_clear()
+#     print(model_create())
+#     session = SessionModel.create(status='closed')
+#     # print(ORMState.handle)

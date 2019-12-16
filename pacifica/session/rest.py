@@ -4,6 +4,7 @@
 
 
 import cherrypy
+from pacifica.session.orm import session_create
 
 # pylint: disable=too-few-public-methods
 class SessionDispatch():
@@ -26,6 +27,13 @@ class SessionDispatch():
     def GET(session_id=None):
         """GET method"""
         return F'Session session_id={session_id}'
+
+    # pylint: disable=invalid-name
+    @staticmethod
+    def POST():
+        """POST method"""
+        record = session_create()
+        return str(record['session_id'])
 
 class FileDispatch():
     """/files route"""

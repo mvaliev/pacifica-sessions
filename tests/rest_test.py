@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """This is the test module."""
 
+import os
 import uuid
 import cherrypy
 import pytest
@@ -9,6 +10,8 @@ import requests
 
 from pacifica.session.rest import SessionDispatch
 from pacifica.session.globals import CP_CONFIG_FILE
+from pacifica.session.orm import model_create
+from pacifica.session.utils import valid_uuid
 
 
 @pytest.fixture(scope="module")
@@ -45,6 +48,17 @@ def test_sessions_get(run_server):
     ref_text = F'Session session_id={session_id}'
     assert resp.text == ref_text
 
+
+# pylint: disable=redefined-outer-name
+def test_sessions_post(run_server, tmpdir):
+    """test post"""
+    tmp_db = os.path.join(tmpdir, 'session.db')
+    model_create(tmp_db)
+    endpoint = F'/sessions'
+    url = run_server
+    resp = requests.post(F'{url}{endpoint}')
+
+    assert valid_uuid(resp.text)
 
 def test_sessions_id_get(run_server):
     """test post"""
