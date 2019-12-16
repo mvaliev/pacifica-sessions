@@ -1,12 +1,8 @@
-# pylint: disable=protected-access
 # pylint: disable=too-few-public-methods
-# pylint: disable=invalid-name
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: utf-8 -*-
 """The ORM module defining the SQL model for example."""
-import sys
 import uuid
-from collections import namedtuple
 from datetime import datetime
 from peewee import Model, CharField, DateTimeField, ForeignKeyField
 from peewee import UUIDField, SqliteDatabase, TextField, IntegerField
@@ -14,12 +10,19 @@ from peewee import UUIDField, SqliteDatabase, TextField, IntegerField
 from playhouse.sqlite_ext import JSONField
 from pacifica.session.globals import DB_FILE_DEFAULT
 
-orm_record = namedtuple('orm_record', 'handle file models')
 
-THIS = sys.modules[__name__]
+class ORMState:
+    """Container for orm state."""
+    handle = None
+    file = None
+    models = None
 
-# never import this directly
-THIS._orm_record = None
+    @staticmethod
+    def clear():
+        """clear ORMState"""
+        ORMState.handle = None
+        ORMState.file = None
+        ORMState.models = None
 
 
 class SessionModel(Model):
@@ -36,7 +39,7 @@ class SessionModel(Model):
     metadata = JSONField(null=True)
 
     class Meta:
-        """peewee metaclasss"""
+        """peewee meta class"""
         table_name = 'sessions'
 
 
@@ -55,16 +58,14 @@ class FileModel(Model):
     metadata = JSONField(null=True)
 
     class Meta:
-        """peewee metaclasss"""
+        """peewee metaclass"""
         table_name = 'files'
 
 
 def orm_create(db_name=DB_FILE_DEFAULT):
     """ Setup sqlite database."""
 
-    # pylint: disable=protected-access
-    if not THIS._orm_record:
-        print('creating new db')
+    if ORMState.handle is None:
         models = [SessionModel, FileModel]
         sqlite = SqliteDatabase(db_name,
                                 pragmas={
@@ -78,21 +79,25 @@ def orm_create(db_name=DB_FILE_DEFAULT):
         sqlite.bind(models)
         sqlite.create_tables(models, safe=True)
 
-        THIS._orm_record = orm_record(sqlite, db_name, models)
+        ORMState.handle = sqlite
+        ORMState.file = db_name
+        ORMState.models = models
 
-    return THIS._orm_record
+    return ORMState.handle, ORMState.file, ORMState.models
 
 
 def orm_clear():
     """ Removes everything in the database, except the file itself """
 
-    if THIS._orm_record:
-        THIS._orm_record.handle.drop_tables(THIS._orm_record.models, safe=True)
-        THIS._orm_record = None
+    if ORMState.handle:
+        ORMState.handle.drop_tables(ORMState.models, safe=True)
+        ORMState.clear()
 
 
 if __name__ == '__main__':
-    print(orm_create())
     orm_clear()
-    print(orm_create())
-    session = SessionModel.create(status='closed')
+    # print(orm_create())
+    # orm_clear()
+    # print(orm_create())
+    # session = SessionModel.create(status='closed')
+    # # print(ORMState.handle)
