@@ -26,7 +26,7 @@
 
 ### sessions
     
-    uuid        - primary uuid session id
+    session_id  - primary uuid session id
     name        - short description (text)
     created     - creation (datetime)
     updated     - last update (datetime)

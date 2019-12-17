@@ -5,6 +5,14 @@
 from decimal import Decimal
 import datetime
 import uuid
+import json
+
+
+def json_extract(json_in, keys):
+    json_dict = json.loads(json_in)
+    dict_out = dict((k, json_dict[k]) for k in keys if k in json_dict)
+
+    return dict_out
 
 
 def json_encode(obj):
@@ -41,3 +49,10 @@ def valid_uuid(uuid_to_test, version=4):
         return False
 
     return str(uuid_obj) == uuid_to_test
+
+
+if __name__ == '__main__':
+    # json_in = json.dumps({'name':'marat', 'year':'69', 'month': 'July'})
+    json_in = '{"name": "marat", "year": "69", "month": "July"}'
+    print(json_in)
+    print(json_extract(json_in, ['name']))

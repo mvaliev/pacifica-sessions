@@ -5,30 +5,15 @@
 import uuid
 from datetime import datetime
 from peewee import Model, CharField, DateTimeField, ForeignKeyField
-from peewee import UUIDField, SqliteDatabase, TextField, IntegerField
+from peewee import UUIDField, TextField, IntegerField
 # warning database type dependency here
 from playhouse.sqlite_ext import JSONField
-from pacifica.session.globals import DB_FILE_DEFAULT
-
-
-class ModelState:
-    """Container for orm state."""
-    handle = None
-    file = None
-    models = None
-
-    @staticmethod
-    def clear():
-        """clear ORMState"""
-        ModelState.handle = None
-        ModelState.file = None
-        ModelState.models = None
 
 
 class SessionModel(Model):
     """Data model for session."""
 
-    session_id = UUIDField(primary_key=True, column_name='uuid', default=uuid.uuid4, index=True)
+    session_id = UUIDField(primary_key=True, default=uuid.uuid4, index=True)
     status = CharField(index=True, default='open', null=False)
     name = TextField(null=True)
     created = DateTimeField(default=datetime.now, index=True)
@@ -36,7 +21,6 @@ class SessionModel(Model):
     deleted = DateTimeField(null=True, index=True)
     description = TextField(null=True)
     system = TextField(null=True)
-    metadata = JSONField(null=True)
 
     class Meta:
         """peewee meta class"""
@@ -46,7 +30,8 @@ class SessionModel(Model):
 class FileModel(Model):
     """Data model for file."""
 
-    session_id = ForeignKeyField(SessionModel, column_name='uuid', backref='files')
+    file_id = UUIDField(primary_key=True, default=uuid.uuid4, index=True)
+    session_id = ForeignKeyField(SessionModel, column_name='session_id', backref='files')
     status = CharField(index=True)
     basename = CharField()
     dirname = CharField()
@@ -55,49 +40,40 @@ class FileModel(Model):
     mimetype = CharField()
     size = IntegerField()
     description = TextField(null=True)
-    metadata = JSONField(null=True)
 
     class Meta:
         """peewee metaclass"""
         table_name = 'files'
 
 
-def model_create(db_name=DB_FILE_DEFAULT):
-    """ Setup sqlite database."""
+class SessionMetaModel(Model):
+    """Data model for session."""
 
-    if ModelState.handle is None:
-        models = [SessionModel, FileModel]
-        sqlite = SqliteDatabase(db_name,
-                                pragmas={
-                                    'journal_mode': 'wal',
-                                    'cache_size': -1 * 64000,  # 64MB
-                                    'foreign_keys': 1,
-                                    'ignore_check_constraints': 0,
-                                }
-                                )
+    session_meta_id = UUIDField(primary_key=True, default=uuid.uuid4, index=True)
+    session_id = ForeignKeyField(SessionModel, backref='files')
+    created = DateTimeField(default=datetime.now, index=True)
+    updated = DateTimeField(default=datetime.now, index=True)
+    deleted = DateTimeField(null=True, index=True)
+    json_blob = JSONField(null=True)
 
-        sqlite.bind(models)
-        sqlite.create_tables(models, safe=True)
-
-        ModelState.handle = sqlite
-        ModelState.file = db_name
-        ModelState.models = models
-
-    return ModelState.handle, ModelState.file, ModelState.models
+    class Meta:
+        """peewee meta class"""
+        table_name = 'session_meta'
 
 
-def model_clear():
-    """ Removes everything in the database, except the file itself """
+class FileMetaModel(Model):
+    """Data model for session."""
 
-    if ModelState.handle:
-        ModelState.handle.drop_tables(ModelState.models, safe=True)
-        ModelState.clear()
+    file_meta_id = UUIDField(primary_key=True, default=uuid.uuid4, index=True)
+    file_id = ForeignKeyField(FileModel, backref='files')
+    created = DateTimeField(default=datetime.now, index=True)
+    updated = DateTimeField(default=datetime.now, index=True)
+    deleted = DateTimeField(null=True, index=True)
+    json_blob = JSONField(null=True)
 
-#
-# if __name__ == '__main__':
-#     model_clear()
-#     print(model_create())
-#     model_clear()
-#     print(model_create())
-#     session = SessionModel.create(status='closed')
-#     # print(ORMState.handle)
+    class Meta:
+        """peewee meta class"""
+        table_name = 'file_meta'
+
+
+
