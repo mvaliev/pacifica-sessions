@@ -9,7 +9,7 @@ from pacifica.session.orm import ORMState
 def test_orm_create(tmpdir):
     """Test ORM creation"""
     tmp_db = os.path.join(tmpdir, 'session.db')
-    ORMState.create(db_name=tmp_db)
+    ORMState.create(tmp_db,'sqlite')
 
     tables = ORMState.get_tables()
     assert set(tables) == {'files', 'sessions', 'file_meta', 'session_meta'}

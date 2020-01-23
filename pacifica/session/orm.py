@@ -14,8 +14,6 @@ from playhouse.shortcuts import model_to_dict, PostgresqlDatabase
 from pacifica.session.globals import DB_FILE_DEFAULT, GLOBAL_CONFIG
 from pacifica.session.utils import json_encode
 from pacifica.session.model import SessionModel, FileModel, SessionMetaModel, FileMetaModel
-from pacifica.session.globals import config
-
 
 logger = logging.getLogger(__name__)
 
@@ -26,56 +24,37 @@ _MODELS = (SessionModel, FileModel, SessionMetaModel, FileMetaModel)
 class ORMState:
     """Container for orm state."""
     _db_handle = None
-    _db_file = None
+    _db_name = None
     _db_models = None
 
     @classmethod
-    def clear(cls):
-        """clear ORMState"""
-        cls._db_handle = None
-        cls._db_file = None
-        cls._db_models = None
-
-    @classmethod
-    def create(cls, db_name=DB_FILE_DEFAULT, clear=False, models=_MODELS):
+    def create(cls, db_name, db_type, host=None, user=None, password=None,
+               port=5432, models=_MODELS):
         """ Setup ORM."""
 
-        try:
-            dbtype = config['general']['dbtype']
-        except KeyError:
-            logger.error(F'Database type not defined')
-            raise
+        if db_type == 'sqlite':
+            logger.info(F'Opening connection to sqlite')
+            db = SqliteDatabase(db_name,
+                                pragmas={
+                                    'journal_mode': 'wal',
+                                    'cache_size': -1 * 64000,  # 64MB
+                                    'foreign_keys': 1,
+                                    'ignore_check_constraints': 0,
+                                }
+                                )
+        elif db_type == 'postgres':
 
-        if dbtype == 'sqlite':
-            db_name = config['sqlite']['dbfile']
-            logger.info(F'Opening connection')
-            if clear:
-                cls.clear()
-            if cls._db_file != db_name:
-                db = SqliteDatabase(db_name,
-                                    pragmas={
-                                        'journal_mode': 'wal',
-                                        'cache_size': -1 * 64000,  # 64MB
-                                        'foreign_keys': 1,
-                                        'ignore_check_constraints': 0,
-                                    }
-                                    )
-        elif dbtype == 'postgres':
-            dbname = config['postgres']['dbname']
-            password = config['postgres']['password']
-            host = config['postgres']['host']
-            user = config['postgres']['user']
-            port = config['postgres']['port']
-            print(dbname)
-
-            db = PostgresqlDatabase(dbname, user=user, password=password,
-                                       host=host, port=port)
+            db = PostgresqlDatabase(name, user=user, password=password,
+                                    host=host, port=port)
+        else:
+            logger.error(F'Unknown database type {db_type}')
+            raise ValueError
 
         db.bind(models)
         db.create_tables(models, safe=True)
 
         cls._db_handle = db
-        cls._db_file = db_name
+        cls._db_name = db_name
         cls._db_models = models
 
     @classmethod
@@ -127,7 +106,7 @@ if __name__ == '__main__':
     logger.addHandler(console)
 
     print(DB_FILE_DEFAULT)
-    ORMState.create()
+    ORMState.create(DB_FILE_DEFAULT,'sqlite')
 
     record = session_create({'name': 'name'})
     uuid_string = json.loads(record)['session_id']
