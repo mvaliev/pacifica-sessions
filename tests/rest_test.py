@@ -43,7 +43,7 @@ def run_server():
 def test_sessions_get(run_server, tmpdir):
     """test post"""
     tmp_db = os.path.join(tmpdir, 'session.db')
-    ORMState.create(tmp_db)
+    ORMState.create(tmp_db,'sqlite')
     session_id = None
     endpoint = F'/sessions'
     url = run_server
@@ -55,7 +55,7 @@ def test_sessions_get(run_server, tmpdir):
 def test_sessions_post(run_server, tmpdir):
     """test post"""
     tmp_db = os.path.join(tmpdir, 'session.db')
-    ORMState.create(tmp_db)
+    ORMState.create(tmp_db,'sqlite')
     endpoint = F'/sessions'
     url = run_server
     json_blob = {'name': 'session-1'}
