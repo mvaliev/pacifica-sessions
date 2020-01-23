@@ -15,17 +15,17 @@ def test_orm_create(tmpdir):
     assert set(tables) == {'files', 'sessions', 'file_meta', 'session_meta'}
 
 
-def test_orm_create_twice(tmpdir):
-    """Test ORM repeated creation"""
-    tmp_db = os.path.join(tmpdir, 'session.db')
-
-    ORMState.create(db_name=tmp_db)
-    db1 = ORMState.get_database()
-
-    ORMState.create(db_name=tmp_db)
-    db2 = ORMState.get_database()
-
-    assert db1 == db2
+# def test_orm_create_twice(tmpdir):
+#     """Test ORM repeated creation"""
+#     tmp_db = os.path.join(tmpdir, 'session.db')
+#
+#     ORMState.create(db_name=tmp_db)
+#     db1 = ORMState.get_database()
+#
+#     ORMState.create(db_name=tmp_db)
+#     db2 = ORMState.get_database()
+#
+#     assert db1 == db2
 
 #
 # def test_model_clear_empty():
