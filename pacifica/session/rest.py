@@ -10,6 +10,9 @@ from pacifica.session.orm import session_create, session_list_all, session_list
 
 
 # pylint: disable=too-few-public-methods
+from pacifica.session.utils import json_extract, dict_extract
+
+
 class SessionDispatch():
     """ routing for session class. """
     exposed = True
@@ -39,8 +42,9 @@ class SessionDispatch():
     # @cherrypy.tools.json_out()
     def POST():
         """POST method"""
-        input_json = cherrypy.request.json
-        record = session_create()
+        input_dict = cherrypy.request.json
+        input_dict = dict_extract(input_dict,['name'])
+        record = session_create(input_dict)
         return record
 
 

@@ -15,6 +15,12 @@ def json_extract(json_in, keys):
     return dict_out
 
 
+def dict_extract(dict_in, keys):
+    dict_out = dict((k, dict_in[k]) for k in keys if k in dict_in)
+
+    return dict_out
+
+
 def json_encode(obj):
     """Custom json encode."""
     datetime_format = "%Y/%m/%d %H:%M:%S"

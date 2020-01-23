@@ -6,15 +6,13 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-celery = "*"
 peewee = "*"
-CherryPy = "*"
-e1839a8 = {editable = true,path = "."}
-pacifica-sessions = {editable = true,path = "."}
 requests = "*"
 pytest = "*"
-pylint = "*"
 uuid = "*"
+CherryPy = "*"
+configparser = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"

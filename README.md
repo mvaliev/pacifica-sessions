@@ -26,7 +26,7 @@
 
 ### sessions
     
-    session_id  - primary uuid session id
+    session_id  - session id (uuid), primary key 
     name        - short description (text)
     created     - creation (datetime)
     updated     - last update (datetime)
@@ -34,3 +34,16 @@
     status      - session status (open/locked)
     description - user description/notes (text)
     exception   - system generated exceptions (text)  
+
+### files
+
+    file_id    - file id (uuid), primary key 
+    session_id - session id (uuid) references session table
+    status     - file status (char)
+    name       - file name (char)
+    path       - file path (char)
+    ctime      - creation time 
+    mtime      - modification time 
+    mimetype   - type (char)
+    size       - file size bytes (int)
+    description = TextField(null=True)
