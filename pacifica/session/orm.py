@@ -44,8 +44,8 @@ class ORMState:
                                 )
         elif db_type == 'postgres':
 
-            db = PostgresqlDatabase(name, user=user, password=password,
-                                    host=host, port=port)
+            db = PostgresqlDatabase(db_name, user=user, password=password,
+                                    host=host, port=port, autoconnect=True)
         else:
             logger.error(F'Unknown database type {db_type}')
             raise ValueError
@@ -56,6 +56,7 @@ class ORMState:
         cls._db_handle = db
         cls._db_name = db_name
         cls._db_models = models
+
 
     @classmethod
     def get_tables(cls):

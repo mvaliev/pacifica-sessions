@@ -72,7 +72,7 @@ if __name__ == '__main__':
     from pacifica.session.globals import CP_CONFIG_FILE
     from pacifica.session.orm import ORMState
 
-    ORMState.create(clear=True)
+    ORMState.create()
     #
     config_file = CP_CONFIG_FILE
     cherrypy.config.update(config_file)
